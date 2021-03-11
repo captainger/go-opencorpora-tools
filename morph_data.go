@@ -122,6 +122,11 @@ func (d *MorphData) Load(fp string) error {
 	return d.readMorphData(f)
 }
 
+// Load loads MorphData from file
+func (d *MorphData) LoadFromReader(r io.Reader) error {
+	return d.readMorphData(r)
+}
+
 // writeMorphData creates, encodes and writes MorphData to a io.Writer
 func (d *MorphData) writeMorphData(w io.Writer) (err error) {
 	g := gob.NewEncoder(w)

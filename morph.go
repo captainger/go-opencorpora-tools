@@ -2,6 +2,8 @@ package opencorpora
 
 import (
 	"errors"
+	"io"
+	"os"
 
 	"github.com/pahanini/mafsa"
 )
@@ -18,9 +20,19 @@ type Morph struct {
 
 // LoadMorph loads morph from file
 func LoadMorph(fp string) (*Morph, error) {
+	f, err := os.Open(fp)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	return LoadMorphFromReader(f)
+}
+
+// LoadMorphFromReader loads morph from reader
+func LoadMorphFromReader(r io.Reader) (*Morph, error) {
 	m := NewMorph()
 	d := MorphData{}
-	if err := d.Load(fp); err != nil {
+	if err := d.LoadFromReader(r); err != nil {
 		return nil, err
 	}
 	if err := m.readMorphData(&d); err != nil {
